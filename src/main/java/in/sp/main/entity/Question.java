@@ -40,7 +40,13 @@ public class Question {
     private String category;
     
     
-    public String getQuestionTitle() { return questionTitle; }
+    public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getQuestionTitle() { return questionTitle; }
     public void setQuestionTitle(String questionTitle) { this.questionTitle = questionTitle; }
 
     public String getOption1() { return option1; }
