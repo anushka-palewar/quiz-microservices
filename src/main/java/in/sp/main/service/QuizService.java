@@ -12,18 +12,25 @@ import org.springframework.stereotype.Service;
 import in.sp.main.entity.Question;
 import in.sp.main.entity.QuestionWrapper;
 import in.sp.main.entity.Quiz;
+import in.sp.main.entity.Response;
 import in.sp.main.repository.QuestionRepository;
 import in.sp.main.repository.QuizRepository;
 import jakarta.websocket.server.ServerEndpoint;
 
 @Service
 public class QuizService {
+
+    private final QuestionService questionService;
 	
 	@Autowired
 	QuizRepository quizRepository;
 	
 	@Autowired
 	QuestionRepository questionrepo;
+
+    QuizService(QuestionService questionService) {
+        this.questionService = questionService;
+    }
 
 	public ResponseEntity<String> createQuiz(String category, int numQ, String title) {
 		List<Question> questions=questionrepo.findRandomQuestionsByCategory(category,numQ);
@@ -50,6 +57,30 @@ public class QuizService {
 			
 		}
 		return new ResponseEntity<>(questionsFrorUser,HttpStatus.OK);
+	}
+
+	
+	public ResponseEntity<Integer> calculateResult(Integer id, List<Response> response) {
+
+	    Optional<Quiz> quizOpt = quizRepository.findById(id);
+
+	    if (quizOpt.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(0);
+	    }
+
+	    Quiz quiz = quizOpt.get();
+	    List<Question> questions = quiz.getQuestions();
+
+	    int right = 0;
+
+	    for (int i = 0; i < response.size(); i++) {
+	        if (i < questions.size() &&
+	            response.get(i).getResponse().equals(questions.get(i).getRightAnswer())) {
+	            right++;
+	        }
+	    }
+
+	    return ResponseEntity.ok(right);
 	}
 	
 }

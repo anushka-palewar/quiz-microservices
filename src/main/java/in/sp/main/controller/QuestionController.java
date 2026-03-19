@@ -27,10 +27,9 @@ public class QuestionController {
 		return questionservice.getAllQuestions();
 	}
 	
-	@PostMapping("addQuestion")
-	public ResponseEntity<String> addQuestion(@RequestBody Question q) {
-		System.out.println(q);
-		return questionservice.addQuestion(q);
+	@PostMapping("/addQuestions")
+	public ResponseEntity<List<Question>> addQuestions(@RequestBody List<Question> questions) {
+	    return questionservice.addQuestions(questions);
 	}
 	
 	 @GetMapping("/getQueById/{id}")

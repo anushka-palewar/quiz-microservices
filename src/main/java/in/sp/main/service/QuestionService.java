@@ -24,20 +24,13 @@ public class QuestionService {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-
 	    return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
 	}
 
 
-	public ResponseEntity<String> addQuestion(Question q) {
-		try {
-			questionrepo.save(q);
-			return new ResponseEntity<>("success",HttpStatus.CREATED);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-
-	    return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+	public ResponseEntity<List<Question>> addQuestions(List<Question> questions) {
+	    List<Question> saved = questionrepo.saveAll(questions);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(saved);
 	}
 	
     public ResponseEntity<Question> getQuestionById(int id) {
@@ -68,6 +61,8 @@ public class QuestionService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question not found");
         }
     }
+
+
 	
 
 }
