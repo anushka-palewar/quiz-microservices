@@ -28,24 +28,23 @@ public class QuestionController {
 	}
 	
 	@PostMapping("addQuestion")
-	public Question addQuestion(@RequestBody Question q) {
+	public ResponseEntity<String> addQuestion(@RequestBody Question q) {
 		System.out.println(q);
 		return questionservice.addQuestion(q);
 	}
 	
-	@GetMapping("getQueById/{id}")
-	public Question getQuestionById(@PathVariable int id) {
-		return questionservice.getQuestionById(id);
-	}
-	
-	@GetMapping("getQueByCategory/{category}")
-	public List<Question> getQuestionByCategory(@PathVariable String category){
-		return questionservice.getQuestionByCategory(category);
-	}
-	
-	@DeleteMapping("/deleteQueById/{id}")
-	public String deleteQuestionById(@PathVariable int id) {
-		return questionservice.deleteByQuestionById(id);
-	}
+	 @GetMapping("/getQueById/{id}")
+	    public ResponseEntity<Question> getQuestionById(@PathVariable int id) {
+	        return questionservice.getQuestionById(id);
+	    }
 
+	    @GetMapping("/getQueByCategory/{category}")
+	    public ResponseEntity<List<Question>> getQuestionByCategory(@PathVariable String category) {
+	        return questionservice.getQuestionByCategory(category);
+	    }
+
+	    @DeleteMapping("/deleteQueById/{id}")
+	    public ResponseEntity<String> deleteQuestionById(@PathVariable int id) {
+	        return questionservice.deleteByQuestionById(id);
+	    }
 }

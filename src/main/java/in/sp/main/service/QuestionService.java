@@ -2,6 +2,7 @@ package in.sp.main.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,24 +29,45 @@ public class QuestionService {
 	}
 
 
-	public Question addQuestion(Question q) {
-		return questionrepo.save(q);
+	public ResponseEntity<String> addQuestion(Question q) {
+		try {
+			questionrepo.save(q);
+			return new ResponseEntity<>("success",HttpStatus.CREATED);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
 	}
+	
+    public ResponseEntity<Question> getQuestionById(int id) {
+        Optional<Question> question = questionrepo.findById(id);
 
-	public Question getQuestionById(int id) {
-	    return questionrepo.findById(id).orElse(null);
-	}
+        if (question.isPresent()) {
+            return ResponseEntity.ok(question.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 
+    public ResponseEntity<List<Question>> getQuestionByCategory(String category) {
+        List<Question> list = questionrepo.findByCategory(category);
 
-	public List<Question> getQuestionByCategory(String category) {
-		return questionrepo.findByCategory(category);
-	}
+        if (!list.isEmpty()) {
+            return ResponseEntity.ok(list);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(list);
+        }
+    }
 
-
-	public String deleteByQuestionById(int id) {
-	    questionrepo.deleteById(id);
-	    return "Question deleted successfully";
-	}
+    public ResponseEntity<String> deleteByQuestionById(int id) {
+        if (questionrepo.existsById(id)) {
+            questionrepo.deleteById(id);
+            return ResponseEntity.ok("Question deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question not found");
+        }
+    }
 	
 
 }
